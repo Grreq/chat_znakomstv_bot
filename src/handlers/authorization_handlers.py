@@ -2,7 +2,7 @@ from aiogram import Router
 from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
-from aiogram.types import Message
+from aiogram.types import Message, ReplyKeyboardRemove
 
 from keyboards import registration_keyboards as reg_kb, main_keyboards as m_kb
 
@@ -29,7 +29,8 @@ async def registration(message: Message, state: FSMContext):
         state (State): Машина состояний.
     """
     await state.set_state(Reg.age)
-    await message.answer("Привет, для начала работы с ботом давай познакомимся!🖐\n\nСколько тебе лет?")
+    await message.answer("Привет, для начала работы с ботом давай познакомимся!🖐\n\nСколько тебе лет?",
+                         reply_markup=ReplyKeyboardRemove())
 
 
 @router.message(Reg.age)
@@ -141,12 +142,8 @@ async def final_step_registration(message: Message, state: FSMContext):
     # }
     if data['photo'] is None and data['description'] == 'Пропустить':
         text = f'{data["name"]}, {data["age"]}, {data["city"]}'
-        await message.answer(f'{data["name"]}, {data["age"]}, {data["city"]}',
-                             reply_markup=reg_kb.start_looking_cards())
     elif data['photo'] is None:
         text = f'{data["name"]}, {data["age"]}, {data["city"]}\n{data["description"]}'
-        await message.answer(f'{data["name"]}, {data["age"]}, {data["city"]}\n{data["description"]}',
-                             reply_markup=reg_kb.start_looking_cards())
     elif data['description'] == 'Пропустить':
         text = f'{data["name"]}, {data["age"]}, {data["city"]}'
         photo = data['photo'][-1].file_id
