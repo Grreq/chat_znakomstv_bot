@@ -10,3 +10,9 @@ router = Router()
 async def begin(message: Message):
     """Handler реагирует на текст 'Начать просмотр анкет!'."""
     await message.answer(text='добавляем просмотр анкет...', reply_markup=m_kb.actions_for_card_keyboard())
+
+
+@router.message()
+async def show_photo(message: Message):
+    if message.content_type == 'photo':
+        await message.answer('Вы отправили фото')
